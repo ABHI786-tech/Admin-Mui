@@ -5,7 +5,6 @@ import LoginPages from './pages/LoginPages';
 import RegisterPage from './pages/RegisterPage';
 import AddEmployee from './pages/AddEmployee';
 import AddRights from './pages/AddRights';
-import ViewRights from './pages/viewRights';
 import AllRights from './pages/AllRights';
 import AllEmployee from './pages/AllEmployee';
 import ForgetPassword from './pages/ForgetPassword';
@@ -16,6 +15,8 @@ import DashboradPage from './pages/DashboradPage';
 import "react-toastify/dist/ReactToastify.css";
 import UpdateEmployee from './pages/UpdateEmployee';
 import NewNavbar from './components/NewNavbar';
+import ViewRights from './pages/ViewRights';
+
 
 
 

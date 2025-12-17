@@ -39,7 +39,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 /* ================= Component ================= */
 
-const ViewRights = () => {
+const AllRights = () => {
   const [employeeData, setEmployeeData] = useState([]);
   const [searchParams] = useSearchParams();
   const queryParamValue = searchParams.get("id");
@@ -156,4 +156,4 @@ const ViewRights = () => {
   );
 };
 
-export default ViewRights;
+export default AllRights;
