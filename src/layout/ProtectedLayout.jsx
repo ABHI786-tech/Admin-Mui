@@ -18,18 +18,21 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import SelectActionCard from '../components/DashboardCard';
 import DrawerAppBar from '../components/Navbar';
 import { Outlet } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import NewNavbar from '../components/NewNavbar';
+
 
 //  react icons 
-// import { MdDashboard } from 'react-icons/md'
-// import { FaUser } from 'react-icons/fa'
-// import { FaUsersLine } from 'react-icons/fa6'
-// import { BiAddToQueue } from "react-icons/bi";
-// import { IoMailOpenOutline } from "react-icons/io5";
+import { MdDashboard } from 'react-icons/md'
+import { FaUser } from 'react-icons/fa'
+import { FaUsersLine } from 'react-icons/fa6'
+import { BiAddToQueue } from "react-icons/bi";
+import { IoMailOpenOutline } from "react-icons/io5";
 
 const drawerWidth = 220;
+
 
 
 
@@ -118,35 +121,39 @@ export default function MiniDrawer() {
     const [open, setOpen] = React.useState(false);
     const [activeIndex, setActiveIndex] = React.useState(null);
 
+const navigate = useNavigate()
+
+
+
     // ['Dashboard', 'Add Employee', 'Total Employee', 'Add Rights', 'Total Rights']
     const SidebarItemList = [{
         id: 1,
         name: 'Dashboard',
         link: '/',
-        // Icon: MdDashboard
+        Icon: <MdDashboard />
     },
     {
         id: 2,
         name: 'Add Employee',
         link: '/addemployee',
-        // Icon: FaUser
+        Icon: <FaUser/>
     }, {
         id: 3,
         name: 'All Employee',
         link: '/allemployee',
-        // Icon: FaUsersLine
+        Icon: <FaUsersLine/>
     },
     {
         id: 4,
         name: 'Add rights',
         link: '/addrights',
-        // Icon: BiAddToQueue
+        Icon: <BiAddToQueue/>
     },
     {
         id: 5,
         name: 'All rights',
         link: '/rights/populate',
-        // Icon: IoMailOpenOutline
+        Icon: <IoMailOpenOutline/>
     },
     ]
 
@@ -163,7 +170,7 @@ export default function MiniDrawer() {
         <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
-                <Toolbar>
+                <Toolbar >
                     <IconButton
                         color="inherit"
                         aria-label="open drawer"
@@ -171,18 +178,20 @@ export default function MiniDrawer() {
                         edge="start"
                         sx={[
                             {
-                                marginRight: 5,
+                                marginRight: 6,
                             },
                             open && { display: 'none' },
                         ]}
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Employee Management Service
+                     {/* <Typography variant="h6" noWrap component="div"> */}
+                        {/* Employee Management Service */}
                         {/* <DrawerAppBar /> */}
-                    </Typography>
+                    {/* </Typography> */}
+                        <NewNavbar sx={{width: "full"}} />
                 </Toolbar>
+                     
             </AppBar>
             <Drawer variant="permanent" open={open}>
                 <DrawerHeader>
@@ -195,7 +204,7 @@ export default function MiniDrawer() {
                     {SidebarItemList.map((text, index) => (
                         <ListItem key={text.id} disablePadding sx={{ display: 'block', margin: "2px" }}>
                             <ListItemButton
-                                onClick={() => setActiveIndex(index)}
+                                onClick={() => {navigate(text.link); setActiveIndex(index)}}
                                 sx={[
                                     {
                                         minHeight: 48,
@@ -205,7 +214,7 @@ export default function MiniDrawer() {
                                         mx: 1,
                                         // ✅ ONLY BACKGROUND CHANGE
                                         backgroundColor:
-                                            activeIndex === index ? 'action.selected' : 'transparent',
+                                            activeIndex === text.link ? 'action.selected' : 'transparent',
 
                                         '&:hover': {
                                             backgroundColor: 'action.hover',
@@ -223,6 +232,8 @@ export default function MiniDrawer() {
                                 <ListItemIcon
                                     sx={[
                                         {
+                                            fontSize:"22px",
+                                            fontWeight:700,
                                             minWidth: 0,
                                             justifyContent: 'center',
                                             color: activeIndex === index ? 'primary.main' : 'text.secondary',
@@ -236,7 +247,7 @@ export default function MiniDrawer() {
                                             },
                                     ]}
                                 >
-                                    {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                                 {text.Icon}
                                 </ListItemIcon>
                                 <ListItemText
                                     primary={text.name}
@@ -264,6 +275,7 @@ export default function MiniDrawer() {
             <Box
                 component="main"
                 sx={{
+                    margin: "5%",
                     flexGrow: 1,
                     minWidth: 0,          // 🔥 very important for responsiveness
                     p: { xs: 1, sm: 2, md: 3 },
@@ -272,7 +284,7 @@ export default function MiniDrawer() {
             >
                 <DrawerHeader />
                 <Outlet />
-                <SelectActionCard />
+                
             </Box>
         </Box>
     );

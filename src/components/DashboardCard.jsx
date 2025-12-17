@@ -4,12 +4,22 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
+import { authSlicePath } from '../redux/slice/authSlice'
+import { useSelector } from 'react-redux';
 
-const cards = [
+
+
+function SelectActionCard() {
+  const [selectedCard, setSelectedCard] = React.useState(0);
+  const AuthUser = useSelector(authSlicePath)
+
+  const cards = [
   {
     id: 1,
-    title: 'Total Employee',
-    description: 'Total employee of the company',
+    title: `Total Employee :     ${AuthUser?.total_employee}`,
+    description: "",
+    // <span sx={{color:"primary", fontSize: "21px"}}> <strong>{AuthUser?.total_employee}</strong> </span>
+
   },
   {
     id: 2,
@@ -22,9 +32,6 @@ const cards = [
     description: 'Add new employees to the system',
   },
 ];
-
-function SelectActionCard() {
-  const [selectedCard, setSelectedCard] = React.useState(0);
 
   return (
     <Box
@@ -63,10 +70,9 @@ function SelectActionCard() {
               </Typography>
 
               <Typography
-                variant="body2"
+                variant="body1"
                 color="text.secondary"
-                sx={{ mt: 1 }}
-              >
+                sx={{ mt: 1 }} >
                 {card.description}
               </Typography>
             </CardContent>
