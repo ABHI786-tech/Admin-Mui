@@ -8,7 +8,15 @@ import AddRights from './pages/AddRights';
 import ViewRights from './pages/viewRights';
 import AllRights from './pages/AllRights';
 import AllEmployee from './pages/AllEmployee';
-import AdminPage from './pages/adminPage';
+import ForgetPassword from './pages/ForgetPassword';
+import ContactUs from './pages/ContactUs';
+import ResetPassword from './pages/ResetPassword';
+import { ToastContainer } from 'react-toastify';
+import DashboradPage from './pages/DashboradPage';
+import "react-toastify/dist/ReactToastify.css";
+import UpdateEmployee from './pages/UpdateEmployee';
+import NewNavbar from './components/NewNavbar';
+
 
 
 function App() {
@@ -16,23 +24,29 @@ function App() {
 
   return (
     <>
-      
+         {/* 🔥 Navbar always on top */}
+      <NewNavbar />
       <Routes>
         <Route element={<MiniDrawer />}>
-          <Route path='/' element={<AdminPage />} />
+          <Route path='/' element={<DashboradPage />} />
           <Route path='/addemployee' element={<AddEmployee />} />
           <Route path='/allemployee' element={<AllEmployee />} />
-          {/* <Route path='/updateemployee/:id' element={<UpdateEmployee />} /> */}
+          <Route path='/updateemployee/:id' element={<UpdateEmployee />} />
           <Route path='/addrights' element={<AddRights />} />
           <Route path='/rights/populate' element={<AllRights />} />
           <Route path='/rights/:id' element={<ViewRights />} />
+        <Route path='/contactus' element={<ContactUs />} />
         </Route>
-
         <Route path='/login' element={<LoginPages />} />
         <Route path='/register' element={<RegisterPage />} />
-        {/* <Route path='/forgetpassword' element={<Forgetpassword />} /> */}
-        {/* <Route path='/resetpassword' element={<ResetPassword />} /> */}
-      </Routes>
+        <Route path='/forgetpassword' element={<ForgetPassword />} />
+        <Route path='/resetpassword' element={<ResetPassword />} />
+    </Routes >
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        theme="colored"
+      />
     </>
   )
 }

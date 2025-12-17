@@ -1,49 +1,77 @@
-import React, { useState } from "react";
-import { Box, Paper, Typography, TextField, MenuItem, Button, Stack } from "@mui/material";
-import { EmployeesRoles } from "../utils/constant";
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  MenuItem,
+  Button,
+  Stack,
+  CircularProgress,
+} from "@mui/material";
 import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosClient } from "../utils/axios";
-import { useNavigate } from "react-router-dom";
-import { useMainContext } from "../context/mainContext";
+import { EmployeesRoles } from "../utils/constant";
 
-const AddEmployee = () => {
+const UpdateEmployee = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { fetchUserProfile } = useMainContext();
-  const [loading, setLoading] = useState(false);
 
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     salary: "",
     mobile: "",
     email: "",
     role: "",
-    image: null,
+    image: "",
     dob: "",
     address: "",
   });
 
   const [errors, setErrors] = useState({});
 
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === "image") {
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
+  // 🔹 Fetch employee
+  const fetchEmployee = async () => {
+    try {
+      setLoading(true);
+      const res = await axiosClient.get(`/updateemployee/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const emp = res.data.employee;
+      setFormData({
+        ...emp,
+        dob: emp.dob ? emp.dob.split("T")[0] : "",
+      });
+    } catch {
+      toast.error("Failed to load employee data");
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (id) fetchEmployee();
+  }, [id]);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const validate = () => {
     const temp = {};
     if (!formData.name) temp.name = "Name is required";
-    if (!formData.image) temp.image = "Image is required";
+    if (!formData.image) temp.image = "Image URL is required";
     if (!formData.dob) temp.dob = "Date of birth is required";
     if (!formData.mobile) temp.mobile = "Mobile number is required";
     if (!formData.email) temp.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) temp.email = "Enter a valid email";
     if (!formData.role) temp.role = "Role is required";
-    if (!formData.salary) temp.salary = "Salary is required";
-    else if (Number(formData.salary) < 1000) temp.salary = "Salary cannot be less than 1000";
+    if (!formData.salary || formData.salary < 1000)
+      temp.salary = "Salary must be at least 1000";
     if (!formData.address) temp.address = "Address is required";
 
     setErrors(temp);
@@ -52,42 +80,24 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!validate()) return;
 
     try {
       setLoading(true);
-      const token = localStorage.getItem("token") || "";
-      if (!token) return;
+      const res = await axiosClient.put(
+        `/updateemployee/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
 
-      const dataToSend = new FormData();
-      Object.keys(formData).forEach((key) => {
-        dataToSend.append(key, formData[key]);
-      });
-
-      const response = await axiosClient.post("/addemployee", dataToSend, {
-        headers: {
-          Authorization: "Bearer " + token,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      toast.success(response.data.message || "Employee added successfully!");
-      setFormData({
-        name: "",
-        salary: "",
-        mobile: "",
-        email: "",
-        role: "",
-        image: null,
-        dob: "",
-        address: "",
-      });
-      setErrors({});
-      navigate("/");
-      fetchUserProfile();
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Something went wrong!");
+      toast.success(res.data.message || "Employee updated successfully");
+      setTimeout(() => navigate("/allemployee"), 1000);
+    } catch {
+      toast.error("Failed to update employee");
     } finally {
       setLoading(false);
     }
@@ -97,24 +107,21 @@ const AddEmployee = () => {
     <Box sx={{ display: "flex", justifyContent: "center", p: 2 }}>
       <Paper elevation={3} sx={{ p: { xs: 2, sm: 4 }, width: "100%", maxWidth: 600 }}>
         <Typography variant="h4" mb={3} align="center" fontWeight="bold">
-          Add Employee
+          Update Employee
         </Typography>
 
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            {/* Image */}
             <TextField
-              label="Employee Image"
+              label="Employee Image URL"
               name="image"
-              type="file"
+              value={formData.image}
               onChange={handleChange}
               fullWidth
-              InputLabelProps={{ shrink: true }}
               error={Boolean(errors.image)}
               helperText={errors.image}
             />
 
-            {/* Name */}
             <TextField
               label="Employee Name"
               name="name"
@@ -125,7 +132,6 @@ const AddEmployee = () => {
               helperText={errors.name}
             />
 
-            {/* DOB */}
             <TextField
               label="Date of Birth"
               name="dob"
@@ -138,7 +144,6 @@ const AddEmployee = () => {
               helperText={errors.dob}
             />
 
-            {/* Mobile */}
             <TextField
               label="Mobile Number"
               name="mobile"
@@ -150,7 +155,6 @@ const AddEmployee = () => {
               helperText={errors.mobile}
             />
 
-            {/* Email */}
             <TextField
               label="Email"
               name="email"
@@ -162,7 +166,6 @@ const AddEmployee = () => {
               helperText={errors.email}
             />
 
-            {/* Role */}
             <TextField
               select
               label="Role"
@@ -181,7 +184,6 @@ const AddEmployee = () => {
               ))}
             </TextField>
 
-            {/* Salary */}
             <TextField
               label="Salary"
               name="salary"
@@ -193,7 +195,6 @@ const AddEmployee = () => {
               helperText={errors.salary}
             />
 
-            {/* Address */}
             <TextField
               label="Address"
               name="address"
@@ -206,9 +207,8 @@ const AddEmployee = () => {
               helperText={errors.address}
             />
 
-            {/* Submit Button */}
-            <Button type="submit" variant="contained" color="primary" disabled={loading}>
-              {loading ? "Adding..." : "Add Employee Data"}
+            <Button type="submit" variant="contained" disabled={loading}>
+              {loading ? <CircularProgress size={22} /> : "Update Employee Data"}
             </Button>
           </Stack>
         </form>
@@ -217,4 +217,4 @@ const AddEmployee = () => {
   );
 };
 
-export default AddEmployee;
+export default UpdateEmployee;
