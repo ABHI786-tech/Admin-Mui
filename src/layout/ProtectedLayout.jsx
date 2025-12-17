@@ -16,7 +16,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import DrawerAppBar from '../components/Navbar';
 import { Outlet } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom'
 import NewNavbar from '../components/NewNavbar';
