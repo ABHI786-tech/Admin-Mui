@@ -26,7 +26,7 @@ function App() {
   return (
     <>
          {/* 🔥 Navbar always on top */}
-      <NewNavbar />
+      {/* <NewNavbar /> */}
       <Routes>
         <Route element={<MiniDrawer />}>
           <Route path='/' element={<DashboradPage />} />
