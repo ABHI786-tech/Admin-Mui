@@ -120,6 +120,7 @@ export default function MiniDrawer() {
     const [open, setOpen] = React.useState(false);
     const [activeIndex, setActiveIndex] = React.useState(null);
     const user = useSelector(authSlicePath)
+    const [loading, setLoading] = React.useState(false)
 
 const navigate = useNavigate()
 
@@ -288,7 +289,7 @@ const navigate = useNavigate()
                     overflowX: 'hidden',
                 }}
             >
-                <DrawerHeader />
+                {/* <DrawerHeader /> */}
                 <Outlet />
                 
             </Box>
