@@ -109,14 +109,14 @@ const AllEmployee = () => {
                     spacing={1}
                     justifyContent="center"
                   >
-                    <Button
+                    {/* <Button
                       component={Link}
                       to={`/rights/populate?id=${employee._id}`}
                       variant="contained"
                       size="small"
                     >
                       View
-                    </Button>
+                    </Button> */}
 
                     <Button
                       component={Link}
